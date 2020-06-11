@@ -1,6 +1,6 @@
 {
   "name": "semo-plugin-hello-world",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Say something to the world and yourself everyday.",
   "repository": {
     "type": "git",
