@@ -31,7 +31,7 @@ Change the default behavior of the command by using `semo config -g`
 
 ```
 semo config set semo-plugin-hello-world.lang zh_CN -g
-semo config set semo-plugin-hello-world.lang it -g
+semo config set semo-plugin-hello-world.inpirationType it -g
 ```
 
 You can use hooks to change the command output. The template is:
