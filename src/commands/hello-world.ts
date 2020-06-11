@@ -13,6 +13,7 @@ export const aliases = 'hw'
 export const builder = function (yargs: any) {
   yargs.option('lang', { describe: 'Set language for this hello world.', choices: ['en_US', 'zh_CN']})
   yargs.option('inspiration-type', { describe: 'Set inpiration type.', choices: ['cn', 'en', 'it', 'poison', 'rule']})
+  yargs.option('clean', { describe: 'No box, no color.' })
   // yargs.commandDir('hello-world')
 }
 
@@ -60,21 +61,23 @@ export const handler = async function (argv: any) {
     return
   }
 
-  // Add color
-  Object.keys(vars).forEach(key => {
-    if (Utils._.isString(vars[key])) {
-      vars[key] = Utils.chalk.cyan.bold(vars[key])
-    } else if (Utils._.isObject(vars[key])) {
-      Object.keys(vars[key]).forEach(childKey => {
-        vars[key][childKey] = Utils.chalk.cyan.bold(vars[key][childKey])
-      })
-    }
-  })
+  if (!argv.clean) {
+    // Add color
+    Object.keys(vars).forEach(key => {
+      if (Utils._.isString(vars[key])) {
+        vars[key] = Utils.chalk.cyan.bold(vars[key])
+      } else if (Utils._.isObject(vars[key])) {
+        Object.keys(vars[key]).forEach(childKey => {
+          vars[key][childKey] = Utils.chalk.cyan.bold(vars[key][childKey])
+        })
+      }
+    })
+  }
 
   const template = Utils.fs.readFileSync(path.resolve(__dirname, '../../resources/templates', lang + '.tpl'))
 
   Utils._.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
   const compiled = Utils._.template(template)
-  const result = compiled(vars)
-  console.log(boxen(result.trim(), { padding: 1 }))
+  const result = compiled(vars).trim()
+  console.log(argv.clean ? result : boxen(result, { padding: 1 }))
 }
