@@ -18,8 +18,9 @@ export const builder = function (yargs: any) {
 }
 
 export const handler = async function (argv: any) {
-  const lang = argv.lang || Utils._.get('semo-plugin-hello-world.lang') || Utils.yargs.locale() || 'en_US'
-  const inspirationType = argv.inspirationType|| Utils._.get('semo-plugin-hello-world.inspirationType') || lang === 'en_US' ? 'en' : 'cn'
+  const lang = argv.lang || Utils._.get(argv, 'semo-plugin-hello-world.lang') || Utils.yargs.locale() || 'en_US'
+  const inspirationType = argv.inspirationType|| Utils._.get(argv, 'semo-plugin-hello-world.inspirationType') || lang === 'en_US' ? 'en' : 'cn'
+  const clean = argv.clean|| Utils._.get(argv, 'semo-plugin-hello-world.clean') || false
 
   // Prepare data
   const vars: any = {}
@@ -61,7 +62,7 @@ export const handler = async function (argv: any) {
     return
   }
 
-  if (!argv.clean) {
+  if (!clean) {
     // Add color
     Object.keys(vars).forEach(key => {
       if (Utils._.isString(vars[key])) {
@@ -79,5 +80,5 @@ export const handler = async function (argv: any) {
   Utils._.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
   const compiled = Utils._.template(template)
   const result = compiled(vars).trim()
-  console.log(argv.clean ? result : boxen(result, { padding: 1 }))
+  console.log(clean ? result : boxen(result, { padding: 1 }))
 }

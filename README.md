@@ -27,11 +27,11 @@ semo hello-world
 
 ## Extension
 
-Change and set default behavior of the command
+Change the default behavior of the command by using `semo config -g`
 
 ```
-semo config semo-plugin-hello-world.lang zh_CN
-semo config semo-plugin-hello-world.lang it
+semo config set semo-plugin-hello-world.lang zh_CN -g
+semo config set semo-plugin-hello-world.lang it -g
 ```
 
 You can use hooks to change the command output. The template is:
