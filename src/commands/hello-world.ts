@@ -34,7 +34,7 @@ export const handler = async function (argv: any) {
       
       vars.hi = hi !== false ? `Hi ${ currentUser },` : ''
       vars.greeting = greeting !== false 
-        ?  '\n' + (greeting || `Today is ${date}, Now is ${time}, I wish you have a happy day today! Here is an inspiration for you:`)
+        ?  '\n' + (greeting || `Today is ${date}, Now is ${time}. I wish you have a happy day today! Here is an inspiration for you:`)
         : ''
     break
     case 'zh_CN':
