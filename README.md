@@ -29,7 +29,7 @@ semo hello-world
 Change and set default behavior of the command
 
 ```
-semo config semo-plugin-hello-world.lang cn
+semo config semo-plugin-hello-world.lang zh_CN
 semo config semo-plugin-hello-world.lang it
 ```
 
