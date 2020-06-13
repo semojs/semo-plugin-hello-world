@@ -19,7 +19,7 @@ export const builder = function (yargs: any) {
 
 export const handler = async function (argv: any) {
   const lang = argv.lang || Utils._.get(argv, 'semo-plugin-hello-world.lang') || Utils.yargs.locale() || 'en_US'
-  const inspirationType = argv.inspirationType|| Utils._.get(argv, 'semo-plugin-hello-world.inspirationType') || lang === 'en_US' ? 'en' : 'cn'
+  const inspirationType = argv.inspirationType|| Utils._.get(argv, 'semo-plugin-hello-world.inspirationType') || (lang === 'en_US' ? 'en' : 'cn')
   const clean = argv.clean|| Utils._.get(argv, 'semo-plugin-hello-world.clean') || false
 
   // Prepare data
