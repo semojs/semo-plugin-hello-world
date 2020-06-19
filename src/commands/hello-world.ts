@@ -4,6 +4,7 @@ import path from 'path'
 
 import { getInspiration } from '../common/inspiration'
 
+export const plugin = 'hello-world'
 export const disabled = false // Set to true to disable this command temporarily
 export const command = 'hello-world'
 export const desc = 'Say something to the world and yourself everyday.'
@@ -18,9 +19,9 @@ export const builder = function (yargs: any) {
 }
 
 export const handler = async function (argv: any) {
-  const lang = argv.lang || Utils._.get(argv, 'semo-plugin-hello-world.lang') || Utils.yargs.locale() || 'en_US'
-  const inspirationType = argv.inspirationType|| Utils._.get(argv, 'semo-plugin-hello-world.inspirationType') || (lang === 'en_US' ? 'en' : 'cn')
-  const clean = argv.clean|| Utils._.get(argv, 'semo-plugin-hello-world.clean') || false
+  const lang = argv.lang || argv.$config.lang || Utils.yargs.locale() || 'en_US'
+  const inspirationType = argv.inspirationType|| argv.$config.inspirationType || (lang === 'en_US' ? 'en' : 'cn')
+  const clean = argv.clean|| argv.$config.clean || false
 
   // Prepare data
   const vars: any = {}
