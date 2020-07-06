@@ -1,4 +1,3 @@
-import { Utils } from '@semo/core'
 import boxen from 'boxen'
 import path from 'path'
 
@@ -19,10 +18,11 @@ export const builder = function (yargs: any) {
 }
 
 export const handler = async function (argv: any) {
-  const lang = argv.lang || argv.$config.lang || Utils.yargs.locale() || 'en_US'
-  const inspirationType = argv.inspirationType|| argv.$config.inspirationType || (lang === 'en_US' ? 'en' : 'cn')
-  const clean = argv.clean|| argv.$config.clean || false
-
+  const { Utils } = argv.$semo
+  const lang = Utils.pluginConfig('lang', Utils.yargs.locale() || 'en_US')
+  const inspirationType = Utils.pluginConfig('inspirationType', lang === 'en_US' ? 'en' : 'cn')
+  const clean = Utils.pluginConfig('clean', false)
+  
   // Prepare data
   const vars: any = {}
   const currentUser = Utils.shell.exec('whoami', {silent: true}).stdout.trim()
