@@ -27,8 +27,8 @@ export const handler = async function (argv: any) {
   const vars: any = {}
   const currentUser = Utils.shell.exec('whoami', {silent: true}).stdout.trim()
   
-  const greeting = await Utils.invokeHook('hello_world_greeting', { mode: 'replace' })
-  const hi = await Utils.invokeHook('hello_world_hi', { mode: 'replace' })
+  const greeting = await Utils.invokeHook('semo-plugin-hello-world:greeting', { mode: 'replace' })
+  const hi = await Utils.invokeHook('semp-plugin-hello-world:hi', { mode: 'replace' })
   let date, time
   switch (lang) {
     case 'en_US':

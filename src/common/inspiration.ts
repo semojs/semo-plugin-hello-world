@@ -2,7 +2,7 @@ import { Utils } from '@semo/core'
 import path from 'path'
 
 export const getInspiration = async (inspirationType) => {
-  let inspirations = await Utils.invokeHook('hook_hello_world_inspirations', { mode: 'replace' })
+  let inspirations = await Utils.invokeHook('semo-plugin-hello-world:inspirations', { mode: 'replace' })
   if (inspirations !== false && (!inspirations || inspirations.length === 0)) {
     const insprationFileRead = Utils.fs.readFileSync(path.resolve(__dirname, '../../resources/inspirations', inspirationType + '.yml'), 'utf8')
     inspirations = Utils.yaml.parse(insprationFileRead)
