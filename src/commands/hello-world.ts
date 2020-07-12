@@ -14,6 +14,7 @@ export const builder = function (yargs: any) {
   yargs.option('lang', { describe: 'Set language for this hello world.', choices: ['en_US', 'zh_CN']})
   yargs.option('inspiration-type', { describe: 'Set inpiration type.', choices: ['cn', 'en', 'it', 'poison', 'rule']})
   yargs.option('clean', { describe: 'No box, no color.' })
+  yargs.option('simple', { describe: 'Just include inspiration' })
   // yargs.commandDir('hello-world')
 }
 
@@ -76,10 +77,16 @@ export const handler = async function (argv: any) {
     })
   }
 
-  const template = Utils.fs.readFileSync(path.resolve(__dirname, '../../resources/templates', lang + '.tpl'))
+  if (argv.simple) {
+    console.log(vars.inspiration)
+  } else {
+    
+    const template = Utils.fs.readFileSync(path.resolve(__dirname, '../../resources/templates', lang + '.tpl'))
+  
+    Utils._.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+    const compiled = Utils._.template(template)
+    const result = compiled(vars).trim()
+    console.log(clean ? result : boxen(result, { padding: 1 }))
+  }
 
-  Utils._.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-  const compiled = Utils._.template(template)
-  const result = compiled(vars).trim()
-  console.log(clean ? result : boxen(result, { padding: 1 }))
 }
