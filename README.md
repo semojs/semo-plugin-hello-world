@@ -24,6 +24,7 @@ semo hello-world
 * **--lang**: For now, it only support `en_US` and `zh_CN`.
 * **--inspiration-type**: For now, it only support `en`, `cn`, `it`, `poison`, and `rule`.
 * **--clean**: No box and no color
+* **--simple**: Just output inspiration
 
 ## Extension
 
