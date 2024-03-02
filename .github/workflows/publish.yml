@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: '16.x' # You might need to adjust this value to your own version
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
+      - name: Install pnpm
+        run: curl -L https://unpkg.com/@pnpm/self-installer | node
+      - run: pnpm install --frozen-lockfile
       - name: Publish
         run: |
           npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
