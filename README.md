@@ -19,6 +19,12 @@ npm install -g semo-plugin-hello-world
 semo hello-world
 ```
 
+Or magically just:
+
+```sh
+npx @semo/cli run hello-world
+```
+
 ## Options
 
 * **--lang**: For now, it only support `en_US` and `zh_CN`.
@@ -31,8 +37,8 @@ semo hello-world
 Change the default behavior of the command by using `semo config -g`
 
 ```
-semo config set $plugin.hello-world.lang zh_CN -g
-semo config set $plugin.hello-world.inpirationType it -g
+semo config set '$plugin.hello-world.lang' zh_CN -g
+semo config set '$plugin.hello-world.inpirationType' it -g
 ```
 
 You can use hooks to change the command output. The template is:
