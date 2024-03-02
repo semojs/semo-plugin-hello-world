@@ -22,6 +22,6 @@ jobs:
       - name: Publish
         run: |
           pnpm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          pnpm publish --ignore-scripts
+          pnpm publish --ignore-scripts --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
