@@ -21,7 +21,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Publish
         run: |
-          npm config set registry https://registry.npmjs.org
-          npm publish --ignore-scripts
+          pnpm config set registry https://registry.npmjs.org
+          pnpm publish --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
