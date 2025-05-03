@@ -24,3 +24,13 @@ jobs:
           pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.ref }}
+        with:
+          allowUpdates: true
+          draft: false
+          prerelease: false
