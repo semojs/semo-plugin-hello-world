@@ -9,3 +9,10 @@ tsconfig.json
 .prettierrc
 .prettierignore
 .ncurc.yml
+coverage
+.husky/*
+.github/*
+tsconfig.tsbuildinfo
+tests/*
+lib/**/*.map
+.lintstagedrc
