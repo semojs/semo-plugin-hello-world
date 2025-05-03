@@ -16,3 +16,4 @@ tsconfig.tsbuildinfo
 tests/*
 lib/**/*.map
 .lintstagedrc
+eslint.config.ts
