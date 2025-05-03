@@ -51,7 +51,10 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"**/*.{ts,js}\"",
-    "format:check": "prettier --check \"**/*.{ts,js}\""
+    "format:check": "prettier --check \"**/*.{ts,js}\"",
+    "deploy": "npm version patch",
+    "deploy:minor": "npm version minor",
+    "deploy:major": "npm version major"
   },
   "dependencies": {
     "@semo/core": "^2.0.7",
