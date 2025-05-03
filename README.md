@@ -1,5 +1,4 @@
-semo-plugin-hello-world
-------------------------
+## semo-plugin-hello-world
 
 This is the hello world plugin for [Semo](https://semo.js.org), it is just for fun, and is the showcase of what Semo plugin looks like.
 
@@ -27,10 +26,10 @@ npx @semo/cli run hello-world
 
 ## Options
 
-* **--lang**: For now, it only support `en_US` and `zh_CN`.
-* **--inspiration-type**: For now, it only support `en`, `cn`, `it`, `poison`, and `rule`.
-* **--clean**: No box and no color
-* **--simple**: Just output inspiration
+- **--lang**: For now, it only support `en_US` and `zh_CN`.
+- **--inspiration-type**: For now, it only support `en`, `cn`, `it`, `poison`, and `rule`.
+- **--clean**: No box and no color
+- **--simple**: Just output inspiration
 
 ## Extension
 
@@ -44,17 +43,15 @@ semo config set '$plugin.hello-world.inpirationType' it -g
 You can use hooks to change the command output. The template is:
 
 ```html
-{{ hi }}
-{{ greeting }}
-{{ inspiration }}
+{{ hi }} {{ greeting }} {{ inspiration }}
 ```
 
 You can change then using these hooks in your global Semo plugins.
 
 ```js
-exports.hook_hello_world_hi = async () => {}
-exports.hook_hello_world_greeting = async () => {}
-exports.hook_hello_world_inspirations = async () => {}
+export const hook_hi = { hello_world: true }
+export const hook_reeting = { hello_world: true }
+export const hook_inspirations = { hello_world: ['a', 'b'] }
 ```
 
 The last inspirations hook need to return an Array of sentences, and than output randomly by the command core.
