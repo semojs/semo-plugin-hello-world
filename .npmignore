@@ -6,3 +6,6 @@ docs
 .eslintignore
 .eslintrc.js
 tsconfig.json
+.prettierrc
+.prettierignore
+.ncurc.yml

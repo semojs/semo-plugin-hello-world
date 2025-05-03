@@ -1,1 +1,1 @@
-export { getInspiration } from './common/inspiration'
+export { getInspiration } from './common/inspiration.js'

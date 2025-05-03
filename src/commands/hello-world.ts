@@ -1,16 +1,25 @@
 import boxen from 'boxen'
 import path from 'path'
+import shell from 'shelljs'
+import dayjs from 'dayjs'
+import { Argv, ArgvExtraOptions, error, warn } from '@semo/core'
+import _ from 'lodash'
+import chalk from 'chalk'
 
-import { getInspiration } from '../common/inspiration'
+import { getInspiration } from '../common/inspiration.js'
+import { readFileSync } from 'fs'
+
+import { fileURLToPath } from 'node:url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const plugin = 'hello-world'
 export const disabled = false // Set to true to disable this command temporarily
 export const command = 'hello-world'
 export const desc = 'Say something to the world and yourself everyday.'
 export const aliases = 'hi'
-// export const middleware = (argv) => {}
 
-export const builder = function (yargs: any) {
+export const builder = function (yargs: Argv) {
   yargs.option('lang', {
     describe: 'Set language for this hello world.',
     choices: ['en_US', 'zh_CN'],
@@ -18,64 +27,70 @@ export const builder = function (yargs: any) {
   yargs.option('inspiration-type', {
     describe: 'Set inpiration type.',
     choices: ['cn', 'en', 'it', 'poison', 'rule'],
+    alias: 'type',
   })
   yargs.option('clean', { describe: 'No box, no color.' })
   yargs.option('simple', { describe: 'Just include inspiration' })
-  // yargs.commandDir('hello-world')
 }
 
-export const handler = async function (argv: any) {
-  const { Utils } = argv.$semo
-  const lang = Utils.pluginConfig('lang', Utils.yargs.locale() || 'en_US')
-  const inspirationType = Utils.pluginConfig(
+export const handler = async function (
+  argv: Required<ArgvExtraOptions> & { [key: string]: any }
+) {
+  const lang = argv.$core.getPluginConfig(
+    'lang',
+    argv.$yargs.locale() || 'en_US'
+  )
+  const inspirationType = argv.$core.getPluginConfig(
     'inspirationType',
     lang === 'en_US' ? 'en' : 'cn'
   )
-  const clean = Utils.pluginConfig('clean', false)
+  const clean = argv.$core.getPluginConfig('clean', false)
 
   // Prepare data
   const vars: any = {}
-  const currentUser = Utils.shell.exec('whoami', { silent: true }).stdout.trim()
-
-  const greeting = await Utils.invokeHook('semo-plugin-hello-world:greeting', {
+  const currentUser = shell.exec('whoami', { silent: true }).stdout.trim()
+  const greeting = await argv.$core.invokeHook(
+    'semo-plugin-hello-world:greeting',
+    {
+      mode: 'replace',
+    }
+  )
+  const hi = await argv.$core.invokeHook('semp-plugin-hello-world:hi', {
     mode: 'replace',
   })
-  const hi = await Utils.invokeHook('semp-plugin-hello-world:hi', {
-    mode: 'replace',
-  })
-  let date, time
+  let date: string, time: string
   switch (lang) {
     case 'en_US':
-      date = Utils.day().format('YYYY-MM-DD')
-      time = Utils.day().format('hh:mm, a')
+      date = dayjs().format('YYYY-MM-DD')
+      time = dayjs().format('hh:mm, a')
 
-      vars.hi = Boolean(hi) ? `Hi ${currentUser},` : ''
-      vars.greeting = Boolean(greeting)
+      vars.hi = Boolean(hi ?? true) ? `Hi ${currentUser},` : ''
+      vars.greeting = Boolean(greeting ?? true)
         ? '\n' +
           (greeting ||
             `Today is ${date}, Now is ${time}. I wish you have a happy day today! Here is an inspiration for you:`)
         : ''
       break
     case 'zh_CN':
-      date = Utils.day().format('YYYY年M月D日')
-      time = Utils.day()
+      date = dayjs().format('YYYY年M月D日')
+      time = dayjs()
         .format('ah点m分')
         .replace('am', '上午')
         .replace('pm', '下午')
 
-      vars.hi = Boolean(hi) ? `你好，${currentUser} 同学：` : ''
-      vars.greeting = Boolean(greeting)
+      vars.hi = Boolean(hi ?? true) ? `你好，${currentUser} 同学：` : ''
+      vars.greeting = Boolean(greeting ?? true)
         ? '\n' +
           (greeting ||
             `今天是${date}, 现在是${time}, 祝你今天一天都有好心情！看看下面一句话是否对你有所启发：`)
         : ''
       break
     default:
-      Utils.error(`${argv.lang} language not supported`)
+      error(`${argv.lang} language not supported`)
       return
   }
 
-  vars.inspiration = await getInspiration(inspirationType)
+  vars.inspiration = await getInspiration(argv, inspirationType)
   vars.inspiration =
     vars.inspiration && vars.inspiration.said
       ? `\n${vars.inspiration.who ? vars.inspiration.who + ': ' : ''}${
@@ -84,20 +99,19 @@ export const handler = async function (argv: any) {
       : ''
 
   if (!vars.hi && !vars.greeting && !vars.inspiration) {
-    Utils.warn(
+    warn(
       'This command is disabled by you, you can enable one of the three hooks to re-enable this command.'
     )
     return
   }
-
   if (!clean) {
     // Add color
-    Object.keys(vars).forEach(key => {
-      if (Utils._.isString(vars[key])) {
-        vars[key] = Utils.chalk.cyan.bold(vars[key])
-      } else if (Utils._.isObject(vars[key])) {
-        Object.keys(vars[key]).forEach(childKey => {
-          vars[key][childKey] = Utils.chalk.cyan.bold(vars[key][childKey])
+    Object.keys(vars).forEach((key) => {
+      if (_.isString(vars[key])) {
+        vars[key] = chalk.cyan.bold(vars[key])
+      } else if (_.isObject(vars[key])) {
+        Object.keys(vars[key]).forEach((childKey) => {
+          vars[key][childKey] = chalk.cyan.bold(vars[key][childKey])
         })
       }
     })
@@ -106,12 +120,13 @@ export const handler = async function (argv: any) {
   if (argv.simple) {
     console.log(vars.inspiration)
   } else {
-    const template = Utils.fs.readFileSync(
-      path.resolve(__dirname, '../../resources/templates', lang + '.tpl')
+    const template = readFileSync(
+      path.resolve(__dirname, '../../resources/templates', lang + '.tpl'),
+      'utf8'
     )
 
-    Utils._.templateSettings.interpolate = /{{([\s\S]+?)}}/g
-    const compiled = Utils._.template(template)
+    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
+    const compiled = _.template(template)
     const result = compiled(vars).trim()
     console.log(clean ? result : boxen(result, { padding: 1 }))
   }
