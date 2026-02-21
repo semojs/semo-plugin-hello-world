@@ -36,9 +36,11 @@ export const builder = function (yargs: Argv) {
 export const handler = async function (
   argv: Required<ArgvExtraOptions> & { [key: string]: any }
 ) {
+  const supportedLangs = ['en_US', 'zh_CN']
+  const detectedLocale = argv.$yargs.locale()
   const lang = argv.$core.getPluginConfig(
     'lang',
-    argv.$yargs.locale() || 'en_US'
+    supportedLangs.includes(detectedLocale) ? detectedLocale : 'en_US'
   )
   const inspirationType = argv.$core.getPluginConfig(
     'inspirationType',
@@ -86,7 +88,7 @@ export const handler = async function (
         : ''
       break
     default:
-      error(`${argv.lang} language not supported`)
+      error(`${lang} language not supported`)
       return
   }
 
